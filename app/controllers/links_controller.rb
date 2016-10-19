@@ -9,7 +9,9 @@ class LinksController < ApplicationController
 
   # GET /links/1
   def show
-    render json: @link
+    @link.clicks = @link.clicks + 1
+    @link.save
+    redirect_to(@link.url)
   end
 
   # POST /links
@@ -17,7 +19,7 @@ class LinksController < ApplicationController
     @link = Link.new(link_params)
 
     if @link.save
-      render json: @link, status: :created, location: @link
+      render json: @link, status: :created
     else
       render json: @link.errors, status: :unprocessable_entity
     end
