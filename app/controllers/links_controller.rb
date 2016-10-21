@@ -1,5 +1,5 @@
 class LinksController < ApplicationController
-  before_action :set_link, only: [:show, :update, :destroy]
+  before_action :set_link, only: [:update, :destroy]
 
   # GET /links
   def index
@@ -9,6 +9,8 @@ class LinksController < ApplicationController
 
   # GET /links/1
   def show
+    @link = Link.find_by_key(params[:key])
+    @link.last_source = request.referer
     @link.clicks = @link.clicks + 1
     @link.save
     redirect_to(@link.url)
@@ -47,6 +49,6 @@ class LinksController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def link_params
-      params.require(:link).permit(:url, :key, :description)
+      params.require(:link).permit(:url, :key, :description, :user_id)
     end
 end
